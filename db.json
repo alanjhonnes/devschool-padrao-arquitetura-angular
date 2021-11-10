@@ -1,0 +1,24 @@
+{
+  "todos": [
+    {
+      "id": "1",
+      "title": "Montar aula de Angular",
+      "isCompleted": false
+    },
+    {
+      "id": "2",
+      "title": "Montar aula de Node.JS",
+      "isCompleted": true
+    },
+    {
+      "id": "3",
+      "title": "Montar aula de GraphQL",
+      "isCompleted": true
+    },
+    {
+      "id": "4",
+      "title": "Revisar Projetos",
+      "isCompleted": true
+    }
+  ]
+}

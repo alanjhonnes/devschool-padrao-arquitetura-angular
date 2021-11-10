@@ -1,0 +1,3 @@
+<div>
+  <app-todo-item *ngFor="let todo of todos" [todo]="todo" (toggleStatus)="onTodoToggled(todo)" (delete)="onTodoDeleted(todo)"></app-todo-item>
+</div>

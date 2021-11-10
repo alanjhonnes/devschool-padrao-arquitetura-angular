@@ -1,0 +1,19 @@
+<h1>Lista de Todos</h1>
+
+<div>Filtros:</div>
+<form [formGroup]="filterForm">
+  <mat-form-field appearance="fill">
+    <mat-label>Título</mat-label>
+    <input matInput formControlName="title">
+  </mat-form-field>
+
+  <mat-radio-group aria-label="Select an option" formControlName="isCompleted">
+    <mat-radio-button [value]="null" class="todos-filter-radio-item">Todos</mat-radio-button>
+    <mat-radio-button [value]="false" class="todos-filter-radio-item">Pendentes</mat-radio-button>
+    <mat-radio-button [value]="true" class="todos-filter-radio-item">Completados</mat-radio-button>
+  </mat-radio-group>
+</form>
+
+<ng-container *ngIf="filteredTodos$ | async as todos">
+  <app-todo-list [todos]="todos" (todoDelete)="onTodoDeleted($event)" (todoToggle)="onTodoToggled($event)"></app-todo-list>
+</ng-container>

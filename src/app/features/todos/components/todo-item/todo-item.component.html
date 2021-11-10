@@ -1,0 +1,9 @@
+<span>{{todo.title}}</span>
+<div class="todo-item-buttons">
+  <button mat-icon-button (click)="onToggleClicked()">
+    <mat-icon>{{ todo.isCompleted ? 'check_box' : 'check_box_outline_blank'}}</mat-icon>
+  </button>
+  <button mat-icon-button (click)="onDeleteClicked()"><mat-icon>delete</mat-icon></button>
+</div>
+
+
