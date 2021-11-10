@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { TodosFacadeService } from 'src/app/shared/facade/todos-facade.service';
 import { Todo } from 'src/app/shared/types/todo.type';
+import { v4 } from 'uuid';
 
 @Component({
   templateUrl: './todos-page.component.html',
@@ -18,7 +19,7 @@ export class TodosPageComponent implements OnInit {
     isCompleted: new FormControl(null),
   });
 
-
+  newTodoControl = new FormControl();
 
   constructor(private todosFacade: TodosFacadeService) { }
 
@@ -41,7 +42,26 @@ export class TodosPageComponent implements OnInit {
       ...todo,
       isCompleted: !todo.isCompleted,
     })
-    .subscribe();
+    .subscribe({
+      next: () => {
+        console.log('todo toggled',)
+      },
+      error: (error) => {
+        alert(error);
+      }
+    });
+  }
+
+  createTodo() {
+    this.todosFacade.addTodo({
+      id: v4(),
+      title: this.newTodoControl.value,
+      isCompleted: false,
+    })
+    .subscribe({
+      next: () => alert('Todo criado'),
+      error: (error) => alert(`erro: ${error}`),
+    });
   }
 
 }

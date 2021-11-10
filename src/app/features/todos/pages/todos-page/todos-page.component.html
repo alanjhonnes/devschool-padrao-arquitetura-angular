@@ -14,6 +14,14 @@
   </mat-radio-group>
 </form>
 
+<mat-form-field appearance="fill">
+  <mat-label>Novo ToDo</mat-label>
+  <input matInput [formControl]="newTodoControl">
+</mat-form-field>
+<button mat-border-button color="primary" (click)="createTodo()">Criar</button>
+
 <ng-container *ngIf="filteredTodos$ | async as todos">
   <app-todo-list [todos]="todos" (todoDelete)="onTodoDeleted($event)" (todoToggle)="onTodoToggled($event)"></app-todo-list>
 </ng-container>
+
+

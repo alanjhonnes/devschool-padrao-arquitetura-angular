@@ -10,7 +10,7 @@ import { Todo } from '../types/todo.type';
 })
 export class TodosFacadeService {
 
-  allTodos$ = this.todosState
+  readonly allTodos$ = this.todosState
     .getState()
     .pipe(
       map(state => state.todos),
@@ -18,7 +18,7 @@ export class TodosFacadeService {
       shareReplay(1),
     )
 
-  filters$ = this.todosState
+  readonly filters$ = this.todosState
     .getState()
     .pipe(
       map((state) => state.filters),
@@ -26,7 +26,7 @@ export class TodosFacadeService {
       shareReplay(1),
     );
 
-  loading$ = this.todosState
+  readonly loading$ = this.todosState
     .getState()
     .pipe(
       map((state) => state.loading),
@@ -34,7 +34,7 @@ export class TodosFacadeService {
       shareReplay(1),
     );
 
-  filteredTodos$ = combineLatest([this.allTodos$, this.filters$])
+  readonly filteredTodos$ = combineLatest([this.allTodos$, this.filters$])
     .pipe(map(([todos, filters]) => {
       return todos.filter(todo => {
         if (filters.isCompleted !== null) {
@@ -71,6 +71,7 @@ export class TodosFacadeService {
               .getTodos()
               .pipe(tap((todos) => {
                 this.todosState.setTodos(todos);
+                this.todosState.setLoaded(true);
               }))
           }
         })
@@ -87,6 +88,7 @@ export class TodosFacadeService {
   }
 
   editTodo(todo: Todo): Observable<Todo> {
+    this.todosState.editTodo(todo);
     return this.todosApi.editTodo(todo)
       .pipe(
         tap((response) => {
