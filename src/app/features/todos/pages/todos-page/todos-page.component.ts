@@ -21,6 +21,11 @@ export class TodosPageComponent implements OnInit {
 
   newTodoControl = new FormControl();
 
+  saving$ = this.todosFacade.saving$;
+
+  todosCount$ = this.todosFacade.todosCount$;
+  todosCompletedCount$ = this.todosFacade.todosCompletedCount$;
+
   constructor(private todosFacade: TodosFacadeService) { }
 
   ngOnInit(): void {

@@ -19,7 +19,9 @@
   <input matInput [formControl]="newTodoControl">
 </mat-form-field>
 <button mat-border-button color="primary" (click)="createTodo()">Criar</button>
+<mat-spinner *ngIf="saving$ | async"></mat-spinner>
 
+<div>{{todosCompletedCount$ | async }}/{{todosCount$ | async}}
 <ng-container *ngIf="filteredTodos$ | async as todos">
   <app-todo-list [todos]="todos" (todoDelete)="onTodoDeleted($event)" (todoToggle)="onTodoToggled($event)"></app-todo-list>
 </ng-container>

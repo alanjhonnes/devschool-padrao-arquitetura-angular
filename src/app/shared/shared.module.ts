@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 export const sharedComponents = []
 
@@ -24,6 +25,7 @@ export const sharedModules = [
   MatTabsModule,
   MatRadioModule,
   MatInputModule,
+  MatProgressSpinnerModule,
 ]
 
 @NgModule({

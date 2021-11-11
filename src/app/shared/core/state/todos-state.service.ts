@@ -10,6 +10,7 @@ export interface TodoFilters {
 export interface TodosState {
   loaded: boolean;
   loading: boolean;
+  saving: boolean;
   todos: Todo[];
   filters: TodoFilters;
 }
@@ -23,6 +24,7 @@ export class TodosStateService {
     loaded: false,
     loading: false,
     todos: [],
+    saving: false,
     filters: {
       isCompleted: null,
       title: null,
@@ -86,6 +88,13 @@ export class TodosStateService {
     this.state$.next({
       ...this.state$.getValue(),
       loaded: loaded,
+    });
+  }
+
+  setSaving(saving: boolean) {
+    this.state$.next({
+      ...this.state$.getValue(),
+      saving: saving,
     });
   }
 

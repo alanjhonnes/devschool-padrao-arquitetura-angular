@@ -3,22 +3,12 @@
     {
       "id": "1",
       "title": "Montar aula de Angular",
-      "isCompleted": false
+      "isCompleted": true
     },
     {
       "id": "2",
       "title": "Montar aula de Node.JS",
       "isCompleted": false
-    },
-    {
-      "id": "3",
-      "title": "Montar aula de GraphQL",
-      "isCompleted": true
-    },
-    {
-      "id": "4",
-      "title": "Revisar Projetos",
-      "isCompleted": true
     },
     {
       "id": "2d5f6c95-5f41-46c1-a3f6-98a82e7cb580",
@@ -28,11 +18,16 @@
     {
       "id": "e7f401d8-73f9-446e-af3d-0db32be0bb01",
       "title": "gfhgfhfgh",
-      "isCompleted": false
+      "isCompleted": true
     },
     {
-      "id": "1dede4dd-f5a0-448a-aae9-cc19591ddc3d",
-      "title": null,
+      "id": "cc065a75-1117-4ff4-9baf-d9931123ab03",
+      "title": "dfgdfgdg",
+      "isCompleted": true
+    },
+    {
+      "id": "b24728d8-4fa5-44c8-abd3-e470252dc755",
+      "title": "gfhgf",
       "isCompleted": false
     }
   ]

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, combineLatest } from 'rxjs';
-import { distinctUntilChanged, filter, map, shareReplay, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, finalize, map, shareReplay, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { TodosApiService } from '../core/async/todos-api.service';
 import { TodoFilters, TodosStateService } from '../core/state/todos-state.service';
 import { Todo } from '../types/todo.type';
@@ -34,6 +34,14 @@ export class TodosFacadeService {
       shareReplay(1),
     );
 
+  readonly saving$ = this.todosState
+    .getState()
+    .pipe(
+      map((state) => state.saving),
+      distinctUntilChanged(),
+      shareReplay(1),
+    );
+
   readonly filteredTodos$ = combineLatest([this.allTodos$, this.filters$])
     .pipe(map(([todos, filters]) => {
       return todos.filter(todo => {
@@ -50,6 +58,15 @@ export class TodosFacadeService {
         return true;
       })
     }))
+
+    readonly todosCount$ = this.allTodos$
+      .pipe(map(todos => todos.length))
+
+    readonly todosCompleted$ = this.allTodos$
+      .pipe(map(todos => todos.filter(todo => todo.isCompleted)))
+
+    readonly todosCompletedCount$ = this.todosCompleted$
+      .pipe(map(todos => todos.length))
 
   constructor(
     private todosApi: TodosApiService,
@@ -79,10 +96,14 @@ export class TodosFacadeService {
   }
 
   addTodo(todo: Todo): Observable<Todo> {
+    this.todosState.setSaving(true);
     return this.todosApi.createTodo(todo)
       .pipe(
         tap((response) => {
           this.todosState.addTodo(response);
+        }),
+        finalize(() => {
+          this.todosState.setSaving(false);
         })
       )
   }
