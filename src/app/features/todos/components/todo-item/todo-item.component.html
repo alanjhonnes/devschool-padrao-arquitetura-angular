@@ -1,9 +1,15 @@
-<span>{{todo.title}}</span>
+<span>{{ todo.title }}</span>
 <div class="todo-item-buttons">
-  <button mat-icon-button (click)="onToggleClicked()">
-    <mat-icon>{{ todo.isCompleted ? 'check_box' : 'check_box_outline_blank'}}</mat-icon>
+  <mat-spinner *ngIf="todo.isSaving"></mat-spinner>
+  <button mat-icon-button (click)="onToggleFavorite()">
+    <mat-icon>{{ todo.isFavorited ? "favorite" : "favorite_border" }}</mat-icon>
   </button>
-  <button mat-icon-button (click)="onDeleteClicked()"><mat-icon>delete</mat-icon></button>
+  <button mat-icon-button (click)="onToggleClicked()">
+    <mat-icon>{{
+      todo.isCompleted ? "check_box" : "check_box_outline_blank"
+    }}</mat-icon>
+  </button>
+  <button mat-icon-button (click)="onDeleteClicked()">
+    <mat-icon>delete</mat-icon>
+  </button>
 </div>
-
-

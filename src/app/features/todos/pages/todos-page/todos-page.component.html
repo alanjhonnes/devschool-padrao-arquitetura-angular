@@ -4,26 +4,38 @@
 <form [formGroup]="filterForm">
   <mat-form-field appearance="fill">
     <mat-label>Título</mat-label>
-    <input matInput formControlName="title">
+    <input matInput formControlName="title" />
   </mat-form-field>
 
   <mat-radio-group aria-label="Select an option" formControlName="isCompleted">
-    <mat-radio-button [value]="null" class="todos-filter-radio-item">Todos</mat-radio-button>
-    <mat-radio-button [value]="false" class="todos-filter-radio-item">Pendentes</mat-radio-button>
-    <mat-radio-button [value]="true" class="todos-filter-radio-item">Completados</mat-radio-button>
+    <mat-radio-button [value]="null" class="todos-filter-radio-item"
+      >Todos</mat-radio-button
+    >
+    <mat-radio-button [value]="false" class="todos-filter-radio-item"
+      >Pendentes</mat-radio-button
+    >
+    <mat-radio-button [value]="true" class="todos-filter-radio-item"
+      >Completados</mat-radio-button
+    >
   </mat-radio-group>
 </form>
 
 <mat-form-field appearance="fill">
   <mat-label>Novo ToDo</mat-label>
-  <input matInput [formControl]="newTodoControl">
+  <input matInput [formControl]="newTodoControl" />
 </mat-form-field>
 <button mat-border-button color="primary" (click)="createTodo()">Criar</button>
+
 <mat-spinner *ngIf="saving$ | async"></mat-spinner>
 
-<div>{{todosCompletedCount$ | async }}/{{todosCount$ | async}}
-<ng-container *ngIf="filteredTodos$ | async as todos">
-  <app-todo-list [todos]="todos" (todoDelete)="onTodoDeleted($event)" (todoToggle)="onTodoToggled($event)"></app-todo-list>
-</ng-container>
-
-
+<div>
+  {{ todosCompletedCount$ | async }}/{{ todosCount$ | async }}
+  <ng-container *ngIf="filteredTodos$ | async as todos">
+    <app-todo-list
+      [todos]="todos"
+      (todoDelete)="onTodoDeleted($event)"
+      (todoToggle)="onTodoToggled($event)"
+      (todoToggleFavorite)="onTodoToggledFavorite($event)"
+    ></app-todo-list>
+  </ng-container>
+</div>

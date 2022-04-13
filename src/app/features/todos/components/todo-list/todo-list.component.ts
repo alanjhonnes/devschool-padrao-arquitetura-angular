@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { Todo } from 'src/app/shared/types/todo.type';
+import { Todo, TodoListItem } from 'src/app/shared/types/todo.type';
 
 @Component({
   selector: 'app-todo-list',
@@ -10,10 +10,13 @@ import { Todo } from 'src/app/shared/types/todo.type';
 export class TodoListComponent implements OnInit {
 
   @Input()
-  todos!: Todo[];
+  todos!: TodoListItem[];
 
   @Output()
   todoToggle = new EventEmitter<Todo>();
+
+  @Output()
+  todoToggleFavorite = new EventEmitter<Todo>();
 
   @Output()
   todoDelete = new EventEmitter<Todo>();
@@ -21,6 +24,10 @@ export class TodoListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onTodoToggledFavorite(todo: Todo) {
+    this.todoToggleFavorite.emit(todo);
   }
 
   onTodoToggled(todo: Todo) {

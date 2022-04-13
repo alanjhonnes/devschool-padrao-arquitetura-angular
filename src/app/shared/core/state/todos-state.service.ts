@@ -13,6 +13,7 @@ export interface TodosState {
   saving: boolean;
   todos: Todo[];
   filters: TodoFilters;
+  todosBeingSaved: Record<string, true | undefined>
 }
 
 @Injectable({
@@ -28,7 +29,8 @@ export class TodosStateService {
     filters: {
       isCompleted: null,
       title: null,
-    }
+    },
+    todosBeingSaved: {},
   });
 
   constructor() { }
@@ -61,7 +63,7 @@ export class TodosStateService {
       ...state,
       todos: state.todos.map(t => {
         // trocando o todo antigo pelo todo novo se id for igual
-        if(t.id === todo.id) {
+        if (t.id === todo.id) {
           return todo;
         }
         return t;
@@ -102,6 +104,28 @@ export class TodosStateService {
     this.state$.next({
       ...this.state$.getValue(),
       filters: filters,
+    });
+  }
+
+  setTodoBeingSaved(todoId: string) {
+    const state = this.state$.getValue();
+    this.state$.next({
+      ...state,
+      todosBeingSaved: {
+        ...state.todosBeingSaved,
+        [todoId]: true,
+      },
+    });
+  }
+
+  setTodoNotBeingSaved(todoId: string) {
+    const state = this.state$.getValue();
+    this.state$.next({
+      ...state,
+      todosBeingSaved: {
+        ...state.todosBeingSaved,
+        [todoId]: undefined
+      },
     });
   }
 

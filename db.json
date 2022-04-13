@@ -3,12 +3,23 @@
     {
       "id": "1",
       "title": "Montar aula de Angular",
-      "isCompleted": true
+      "isCompleted": false,
+      "isFavorited": true,
+      "isSaving": false
     },
     {
-      "id": "2",
-      "title": "Montar aula de Node.JS",
-      "isCompleted": false
+      "id": "f4d00611-a751-4c57-8fde-1acc676b1d35",
+      "title": "Aula arquitetura",
+      "isCompleted": false,
+      "isFavorited": true,
+      "isSaving": false
+    },
+    {
+      "id": "38315f5c-4fcb-4461-9d1a-c2bae6d0e038",
+      "title": "Alan Jhonnes Banlian Da Silva e Sa",
+      "isCompleted": false,
+      "isFavorited": false,
+      "isSaving": false
     }
   ]
 }
