@@ -4,15 +4,13 @@
       "id": "f4d00611-a751-4c57-8fde-1acc676b1d35",
       "title": "Aula arquitetura",
       "isCompleted": true,
-      "isFavorited": true,
-      "isSaving": false
+      "isFavorited": true
     },
     {
       "id": "38315f5c-4fcb-4461-9d1a-c2bae6d0e038",
       "title": "Alan Jhonnes Banlian Da Silva e Sa",
-      "isCompleted": true,
-      "isFavorited": true,
-      "isSaving": false
+      "isCompleted": false,
+      "isFavorited": false
     }
   ]
 }

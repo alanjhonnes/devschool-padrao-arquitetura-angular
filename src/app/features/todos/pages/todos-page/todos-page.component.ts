@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { TodoFilters } from 'src/app/shared/core/state/todos-state.service';
 import { TodosFacadeService } from 'src/app/shared/facade/todos-facade.service';
 import { Todo } from 'src/app/shared/types/todo.type';
@@ -11,7 +11,7 @@ import { v4 } from 'uuid';
   templateUrl: './todos-page.component.html',
   styleUrls: ['./todos-page.component.scss']
 })
-export class TodosPageComponent implements OnInit {
+export class TodosPageComponent implements OnInit, OnDestroy {
 
   filteredTodos$ = this.todosFacade.orderedTodos$;
   loading$ = this.todosFacade.loading$;
@@ -24,18 +24,33 @@ export class TodosPageComponent implements OnInit {
   newTodoControl = new FormControl();
 
   saving$ = this.todosFacade.saving$;
+  isSaving: boolean = false;
 
   todosCount$ = this.todosFacade.todosCount$;
   todosCompletedCount$ = this.todosFacade.todosCompletedCount$;
 
-  constructor(private todosFacade: TodosFacadeService) { }
+  destroy$ = new Subject<void>();
+
+  constructor(private todosFacade: TodosFacadeService) {}
 
   ngOnInit(): void {
+    // Esse é um observable infinito, então usamos o takeUntil com destroy$ para que possamos completar
+    // o observable quando esse componente for destruido para evitarmos vazamento de memória.
+    this.saving$.pipe(
+      takeUntil(this.destroy$)
+    )
+    .subscribe({
+      next: (isSaving) => {
+        // armazenamos o saving em uma propriedade primitiva para evitarmos 
+        // ter que fazer subscribe repetidas vezes no template.
+        this.isSaving = isSaving
+      }
+    })
     this.todosFacade.loadTodos().subscribe();
     this.filterForm
       .valueChanges
       .pipe(
-        debounceTime(500),
+        debounceTime(300),
         // using rawValue to remove undefined values from form
         map(() => this.filterForm.getRawValue())
       )
@@ -91,6 +106,12 @@ export class TodosPageComponent implements OnInit {
         next: () => console.log('Todo criado'),
         error: (error) => console.log(`erro: ${error}`),
       });
+  }
+
+  ngOnDestroy(): void {
+    // notificamos que o componente foi destruido
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }
