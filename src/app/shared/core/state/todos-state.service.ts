@@ -21,6 +21,9 @@ export interface TodosState {
 })
 export class TodosStateService {
 
+  /**
+   * Estado principal representado por um BehaviorSubject, que tem o conceito de "valor atual"
+   */
   private state$ = new BehaviorSubject<TodosState>({
     loaded: false,
     loading: false,
@@ -35,9 +38,18 @@ export class TodosStateService {
 
   constructor() { }
 
+  /**
+   * Utilizamos essa função para expor o estado como um Observable, 
+   * para evitar que os métodos de next/error/complete BehaviorSubject fiquem expostos
+   */
   getState(): Observable<TodosState> {
     return this.state$.asObservable();
   }
+
+  /* 
+  Métodos de atualização do estado. Percebam que nós estamos sempre gerando um novo objeto literal, usando o operador
+   ... spread para copiar o estado antigo e alterar somente o que for necessário
+*/
 
   setTodos(todos: Todo[]) {
     this.state$.next({
@@ -113,6 +125,7 @@ export class TodosStateService {
       ...state,
       todosBeingSaved: {
         ...state.todosBeingSaved,
+        // adicionamos o id do Todo aqui como true para indicar que ele está sendo salvo
         [todoId]: true,
       },
     });
@@ -124,6 +137,7 @@ export class TodosStateService {
       ...state,
       todosBeingSaved: {
         ...state.todosBeingSaved,
+        // setamos o todoId aqui para undefined para "remover" o item do objeto
         [todoId]: undefined
       },
     });

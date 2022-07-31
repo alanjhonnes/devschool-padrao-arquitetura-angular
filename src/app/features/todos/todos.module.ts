@@ -17,6 +17,6 @@ import { TodoItemComponent } from './components/todo-item/todo-item.component';
   imports: [
     SharedModule,
     TodosRoutingModule
-  ]
+  ],
 })
 export class TodosModule { }

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, map } from 'rxjs/operators';
+import { TodoFilters } from 'src/app/shared/core/state/todos-state.service';
 import { TodosFacadeService } from 'src/app/shared/facade/todos-facade.service';
 import { Todo } from 'src/app/shared/types/todo.type';
 import { v4 } from 'uuid';
@@ -16,8 +17,8 @@ export class TodosPageComponent implements OnInit {
   loading$ = this.todosFacade.loading$;
 
   filterForm = new FormGroup({
-    title: new FormControl(''),
-    isCompleted: new FormControl(null),
+    title: new FormControl<string | null>(''),
+    isCompleted: new FormControl<boolean | null>(null),
   });
 
   newTodoControl = new FormControl();
@@ -35,6 +36,8 @@ export class TodosPageComponent implements OnInit {
       .valueChanges
       .pipe(
         debounceTime(500),
+        // using rawValue to remove undefined values from form
+        map(() => this.filterForm.getRawValue())
       )
       .subscribe(filters => {
         this.todosFacade.updateTodosFilters(filters);
@@ -78,6 +81,7 @@ export class TodosPageComponent implements OnInit {
 
   createTodo() {
     this.todosFacade.addTodo({
+      // v4 é uma função para gerar um GUID versão 4, que é um identificador único
       id: v4(),
       title: this.newTodoControl.value,
       isCompleted: false,

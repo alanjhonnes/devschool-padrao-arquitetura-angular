@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, combineLatest } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, finalize, map, shareReplay, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, finalize, map, retry, shareReplay, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { TodosApiService } from '../core/async/todos-api.service';
 import { TodoFilters, TodosStateService } from '../core/state/todos-state.service';
 import { Todo, TodoListItem } from '../types/todo.type';
@@ -10,6 +10,9 @@ import { Todo, TodoListItem } from '../types/todo.type';
 })
 export class TodosFacadeService {
 
+  /**
+   * Todos as tarefas incluindo se ela está sendo salva ou não
+   */
   readonly allTodos$ = this.todosState
     .getState()
     .pipe(
@@ -27,6 +30,9 @@ export class TodosFacadeService {
       shareReplay(1),
     )
 
+  /**
+   * Estado atual dos filtros
+   */
   readonly filters$ = this.todosState
     .getState()
     .pipe(
@@ -35,6 +41,9 @@ export class TodosFacadeService {
       shareReplay(1),
     );
 
+  /**
+   * Estado de loading das tarefas
+   */
   readonly loading$ = this.todosState
     .getState()
     .pipe(
@@ -43,6 +52,9 @@ export class TodosFacadeService {
       shareReplay(1),
     );
 
+  /**
+   * Estado de salvamento de uma nova tarefa
+   */
   readonly saving$ = this.todosState
     .getState()
     .pipe(
@@ -51,15 +63,20 @@ export class TodosFacadeService {
       shareReplay(1),
     );
 
+  /**
+   * Lista de tarefas filtradas com base nos filtros atuais
+   */
   readonly filteredTodos$ = combineLatest([this.allTodos$, this.filters$])
     .pipe(
       map(([todos, filters]) => {
         return todos.filter(todo => {
+          // filtragem de completo, se for nulo não fazemos nada pois representa "todos"
           if (filters.isCompleted !== null) {
             if (todo.isCompleted !== filters.isCompleted) {
               return false;
             }
           }
+          // filtro pelo nome
           if (filters.title !== null && filters.title !== '') {
             if (!todo.title.toLocaleLowerCase().includes(filters.title.toLocaleLowerCase())) {
               return false;
@@ -69,17 +86,29 @@ export class TodosFacadeService {
         })
       }))
 
+  /**
+   * Tarefas filtradas e ordenadas por favoritos
+   */
   readonly orderedTodos$ = this.filteredTodos$
     .pipe(
       map(orderTodosByFavorites)
     )
 
+  /**
+   * o número total de tarefas
+   */
   readonly todosCount$ = this.allTodos$
     .pipe(map(todos => todos.length))
 
+  /**
+   * Lista de tarefas completadas
+   */
   readonly todosCompleted$ = this.allTodos$
     .pipe(map(todos => todos.filter(todo => todo.isCompleted)))
 
+  /**
+   * Número total de tarefas completadas
+   */
   readonly todosCompletedCount$ = this.todosCompleted$
     .pipe(map(todos => todos.length))
 
@@ -89,6 +118,9 @@ export class TodosFacadeService {
   ) { }
 
 
+  /**
+   * Ordena que as tarefas sejam carregadas do backend ou do cache
+   */
   loadTodos(): Observable<Todo[]> {
     return this.todosState
       .getState()
@@ -99,25 +131,37 @@ export class TodosFacadeService {
             // todos já carregados, só retornamos a lista já carregada
             return of(state.todos)
           } else {
+            this.todosState.setLoading(true);
             return this.todosApi
               .getTodos()
-              .pipe(tap((todos) => {
-                this.todosState.setTodos(todos);
-                this.todosState.setLoaded(true);
-              }))
+              .pipe(
+                tap((todos) => {
+                  this.todosState.setTodos(todos);
+                  this.todosState.setLoaded(true);
+                }),
+                finalize(() => {
+                  this.todosState.setLoading(false);
+                })
+              )
           }
         })
       )
   }
 
+  /**
+   * Adiciona uma nova tarefa
+   */
   addTodo(todo: Todo): Observable<Todo> {
+    // inicializamos o estado de "saving"
     this.todosState.setSaving(true);
     return this.todosApi.createTodo(todo)
       .pipe(
         tap((response) => {
+          // se a resposta for bem sucedida nós adicionamos a tarefa 
           this.todosState.addTodo(response);
         }),
         finalize(() => {
+          // em caso de complete ou error, nós setamos o saving para false
           this.todosState.setSaving(false);
         })
       )
@@ -137,21 +181,30 @@ export class TodosFacadeService {
       )
   }
 
+
   deleteTodo(todo: Todo) {
     return this.todosApi.deleteTodo(todo)
       .pipe(
         tap(() => {
+          // aqui podemos remover o todo da nossa lista pelo ID, sem precisar fazer uma busca nos items do backend novamente
           this.todosState.removeTodo(todo.id);
         })
       );
   }
 
+  /**
+   * Atualiza os filtros atuais
+   */
   updateTodosFilters(filters: TodoFilters) {
     this.todosState.setFilters(filters);
   }
 }
 
+/**
+ * Ordena os todos por favoritos
+ */
 export function orderTodosByFavorites(todos: TodoListItem[]): TodoListItem[] {
+  // utilizamos o slice aqui para duplicar o array, evitando de modificarmos o array original
   return todos.slice()
     .sort((a, b) => {
       if (a.isFavorited && !b.isFavorited) {

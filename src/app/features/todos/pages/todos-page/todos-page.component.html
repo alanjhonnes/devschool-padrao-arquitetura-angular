@@ -20,17 +20,18 @@
   </mat-radio-group>
 </form>
 
+
 <mat-form-field appearance="fill">
   <mat-label>Novo ToDo</mat-label>
   <input matInput [formControl]="newTodoControl" />
 </mat-form-field>
-<button mat-border-button color="primary" (click)="createTodo()">Criar</button>
+<button mat-raised-button color="primary" (click)="createTodo()">Criar</button>
 
-<mat-spinner *ngIf="saving$ | async"></mat-spinner>
-
+<mat-spinner *ngIf="saving$ | async" diameter="24" color="accent"></mat-spinner>
+<mat-spinner *ngIf="loading$ | async" diameter="24" color="primary"></mat-spinner>
 <div>
   {{ todosCompletedCount$ | async }}/{{ todosCount$ | async }}
-  <ng-container *ngIf="filteredTodos$ | async as todos">
+  <ng-container *ngIf="filteredTodos$ | async as todos;">
     <app-todo-list
       [todos]="todos"
       (todoDelete)="onTodoDeleted($event)"

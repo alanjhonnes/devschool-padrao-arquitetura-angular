@@ -1,6 +1,6 @@
 <span>{{ todo.title }}</span>
 <div class="todo-item-buttons">
-  <mat-spinner *ngIf="todo.isSaving"></mat-spinner>
+  <mat-spinner class="todo-item-spinner" diameter="24" *ngIf="todo.isSaving"></mat-spinner>
   <button mat-icon-button (click)="onToggleFavorite()">
     <mat-icon>{{ todo.isFavorited ? "favorite" : "favorite_border" }}</mat-icon>
   </button>

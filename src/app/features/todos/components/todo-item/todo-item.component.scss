@@ -7,4 +7,12 @@
 
 .todo-item-buttons {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.todo-item-spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
 }
