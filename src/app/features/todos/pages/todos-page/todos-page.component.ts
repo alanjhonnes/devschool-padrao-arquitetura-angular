@@ -55,7 +55,8 @@ export class TodosPageComponent implements OnInit, OnDestroy {
       .pipe(
         debounceTime(300),
         // using rawValue to remove undefined values from form
-        map(() => this.filterForm.getRawValue())
+        map(() => this.filterForm.getRawValue()),
+        takeUntil(this.destroy$)
       )
       .subscribe(filters => {
         this.todosFacade.updateTodosFilters(filters);

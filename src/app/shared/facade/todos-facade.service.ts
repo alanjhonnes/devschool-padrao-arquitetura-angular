@@ -184,11 +184,16 @@ export class TodosFacadeService {
 
 
   deleteTodo(todo: Todo) {
+    // this.todosState.removeTodo(todo.id);
+    this.todosState.setTodoBeingSaved(todo.id)
     return this.todosApi.deleteTodo(todo)
       .pipe(
         tap(() => {
           // aqui podemos remover o todo da nossa lista pelo ID, sem precisar fazer uma busca nos items do backend novamente
           this.todosState.removeTodo(todo.id);
+        }),
+        finalize(() => {
+          this.todosState.setTodoNotBeingSaved(todo.id)
         })
       );
   }

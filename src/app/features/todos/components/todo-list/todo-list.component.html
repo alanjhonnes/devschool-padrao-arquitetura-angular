@@ -2,8 +2,8 @@
   <app-todo-item
     *ngFor="let todo of todos"
     [todo]="todo"
-    (toggleFavorite)="onTodoToggledFavorite(todo)"
-    (toggleStatus)="onTodoToggled(todo)"
-    (delete)="onTodoDeleted(todo)"
+    (toggleFavorite)="onTodoToggledFavorite($event)"
+    (toggleStatus)="onTodoToggled($event)"
+    (delete)="onTodoDeleted($event)"
   ></app-todo-item>
 </div>
