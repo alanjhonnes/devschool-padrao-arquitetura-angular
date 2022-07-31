@@ -4,13 +4,29 @@
       "id": "f4d00611-a751-4c57-8fde-1acc676b1d35",
       "title": "Aula arquitetura",
       "isCompleted": true,
-      "isFavorited": false
+      "isFavorited": true,
+      "isSaving": false
     },
     {
       "id": "38315f5c-4fcb-4461-9d1a-c2bae6d0e038",
-      "title": "Aula RxJS",
+      "title": "Alan Jhonnes Banlian Da Silva e Sa",
       "isCompleted": true,
-      "isFavorited": true
+      "isFavorited": true,
+      "isSaving": false
+    },
+    {
+      "id": "fce5cb74-0afd-4f9a-9733-ed728914bb66",
+      "title": "fdgfdg",
+      "isCompleted": true,
+      "isFavorited": true,
+      "isSaving": false
+    },
+    {
+      "id": "deaeb602-9c33-4100-8170-93152e970e46",
+      "title": "dfg",
+      "isCompleted": true,
+      "isFavorited": true,
+      "isSaving": false
     }
   ]
 }

@@ -168,6 +168,7 @@ export class TodosFacadeService {
   }
 
   editTodo(todo: Todo): Observable<Todo> {
+    // Descomente para simular uma resposta "otimista"
     // this.todosState.editTodo(todo);
     this.todosState.setTodoBeingSaved(todo.id)
     return this.todosApi.editTodo(todo)
