@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { TodoFilters } from 'src/app/shared/core/state/todos-state.service';
@@ -17,11 +17,14 @@ export class TodosPageComponent implements OnInit, OnDestroy {
   loading$ = this.todosFacade.loading$;
 
   filterForm = new FormGroup({
-    title: new FormControl<string | null>(''),
+    title: new FormControl<string | null>(null),
     isCompleted: new FormControl<boolean | null>(null),
   });
 
-  newTodoControl = new FormControl();
+  newTodoControl = new FormControl('', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.minLength(3)]
+  });
 
   saving$ = this.todosFacade.saving$;
   isSaving: boolean = false;
