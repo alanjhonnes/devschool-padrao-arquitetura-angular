@@ -17,6 +17,10 @@ export class TodosApiService {
     return this.http.get<Todo[]>(this.apiPath);
   }
 
+  getTodo(id: string): Observable<Todo> {
+    return this.http.get<Todo>(`${this.apiPath}/${id}`);
+  }
+
   createTodo(todo: Todo) {
     return this.http.post<Todo>(this.apiPath, todo);
   }

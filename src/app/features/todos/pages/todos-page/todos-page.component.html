@@ -20,20 +20,29 @@
 </form>
 
 <div class="new-todo-form">
-  <mat-form-field appearance="fill">
-    <mat-label>Nova Tarefa</mat-label>
-    <input matInput
-           [formControl]="newTodoControl" />
-  </mat-form-field>
-  <button mat-raised-button
-          color="primary"
-          [disabled]="isSaving || newTodoControl.invalid"
-          (click)="createTodo()">
-    {{ isSaving ? 'Salvando...' : 'Criar' }}
-  </button>
-  <mat-spinner *ngIf="isSaving"
-               diameter="24"
-               color="accent"></mat-spinner>
+  <form [formGroup]="newTodoForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Título Nova Tarefa</mat-label>
+      <input matInput
+             formControlName="title" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Descrição Nova Tarefa</mat-label>
+      <input matInput
+             formControlName="description" />
+    </mat-form-field>
+
+    <button mat-raised-button
+            color="primary"
+            [disabled]="isSaving || newTodoForm.invalid"
+            (click)="createTodo()">
+      {{ isSaving ? 'Salvando...' : 'Criar' }}
+    </button>
+    <mat-spinner *ngIf="isSaving"
+                 diameter="24"
+                 color="accent"></mat-spinner>
+  </form>
 </div>
 
 
@@ -44,6 +53,7 @@
   {{ todosCompletedCount$ | async }}/{{ todosCount$ | async }}
   <ng-container *ngIf="filteredTodos$ | async as todos;">
     <app-todo-list [todos]="todos"
+                   (todoSelected)="onTodoSelected($event)"
                    (todoDelete)="onTodoDeleted($event)"
                    (todoToggle)="onTodoToggled($event)"
                    (todoToggleFavorite)="onTodoToggledFavorite($event)"></app-todo-list>

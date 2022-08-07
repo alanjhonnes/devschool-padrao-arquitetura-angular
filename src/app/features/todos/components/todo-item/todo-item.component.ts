@@ -21,6 +21,9 @@ export class TodoItemComponent implements OnInit {
   @Output()
   delete = new EventEmitter<Todo>();
 
+  @Output()
+  selected = new EventEmitter<Todo>();
+
   constructor() { }
 
   ngOnInit(): void {
@@ -36,6 +39,10 @@ export class TodoItemComponent implements OnInit {
 
   onDeleteClicked() {
     this.delete.emit(this.todo);
+  }
+
+  onSelectClick() {
+    this.selected.emit(this.todo);
   }
 
 }

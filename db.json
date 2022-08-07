@@ -3,12 +3,21 @@
     {
       "id": "f4d00611-a751-4c57-8fde-1acc676b1d35",
       "title": "Aula arquitetura",
+      "description": "",
       "isCompleted": true,
       "isFavorited": true
     },
     {
       "id": "38315f5c-4fcb-4461-9d1a-c2bae6d0e038",
       "title": "Aula RxJS",
+      "description": "aula",
+      "isCompleted": false,
+      "isFavorited": false
+    },
+    {
+      "id": "6afb318d-602c-4776-b031-ec8d5157559e",
+      "title": "Exercicio",
+      "description": "exercicio",
       "isCompleted": false,
       "isFavorited": false
     }

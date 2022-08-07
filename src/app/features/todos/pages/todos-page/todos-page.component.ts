@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { TodoFilters } from 'src/app/shared/core/state/todos-state.service';
@@ -21,10 +22,22 @@ export class TodosPageComponent implements OnInit, OnDestroy {
     isCompleted: new FormControl<boolean | null>(null),
   });
 
-  newTodoControl = new FormControl('', {
+  newTodoTitleControl = new FormControl('', {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(3)]
   });
+
+  newTodoDescriptionControl = new FormControl('', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.minLength(3)]
+  });
+
+  newTodoForm = new FormGroup({
+    title: this.newTodoTitleControl,
+    description: this.newTodoDescriptionControl,
+  })
+
+  
 
   saving$ = this.todosFacade.saving$;
   isSaving: boolean = false;
@@ -34,7 +47,11 @@ export class TodosPageComponent implements OnInit, OnDestroy {
 
   destroy$ = new Subject<void>();
 
-  constructor(private todosFacade: TodosFacadeService) {}
+  constructor(
+    private todosFacade: TodosFacadeService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    ) {}
 
   ngOnInit(): void {
     // Esse é um observable infinito, então usamos o takeUntil com destroy$ para que possamos completar
@@ -98,11 +115,19 @@ export class TodosPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  onTodoSelected(todo: Todo) {
+    this.router.navigate([todo.id], {
+      relativeTo: this.activatedRoute,
+    })
+  }
+
   createTodo() {
+    const formValue = this.newTodoForm.getRawValue();
     this.todosFacade.addTodo({
       // v4 é uma função para gerar um GUID versão 4, que é um identificador único
       id: v4(),
-      title: this.newTodoControl.value,
+      title: formValue.title,
+      description: formValue.description,
       isCompleted: false,
       isFavorited: false,
     })

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, combineLatest } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, finalize, map, retry, shareReplay, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, finalize, map, mergeMap, retry, shareReplay, startWith, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { TodosApiService } from '../core/async/todos-api.service';
 import { TodoFilters, TodosStateService } from '../core/state/todos-state.service';
-import { Todo, TodoListItem } from '../types/todo.type';
+import { Todo, TodoListItem, TodoState } from '../types/todo.type';
 
 @Injectable({
   providedIn: 'root'
@@ -203,6 +203,40 @@ export class TodosFacadeService {
    */
   updateTodosFilters(filters: TodoFilters) {
     this.todosState.setFilters(filters);
+  }
+
+  getTodoById(todoId: string): Observable<TodoState> {
+    return this.allTodos$
+      .pipe(
+        take(1),
+        mergeMap(todos => {
+          const loadedTodo = todos.find(todo => todo.id === todoId);
+          if (loadedTodo) {
+            return of({
+              loading: false,
+              todo: loadedTodo,
+            });
+          }
+          return this.todosApi.getTodo(todoId)
+            .pipe(
+              tap(todo => {
+                this.todosState.addTodo(todo)
+              }),
+              map(response => ({
+                loading: false,
+                todo: response,
+              })),
+              startWith({
+                loading: true,
+                todo: null,
+              }),
+              catchError(() => of({
+                loading: false,
+                todo: null,
+              }))
+            );
+        })
+      )
   }
 }
 

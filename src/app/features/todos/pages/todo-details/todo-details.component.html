@@ -1,0 +1,11 @@
+<mat-spinner *ngIf="todoState.loading; else loaded"></mat-spinner>
+
+<ng-template #loaded>
+    <div *ngIf="todoState.todo; else notFound">
+        {{todoState.todo | json}}
+    </div>
+</ng-template>
+
+<ng-template #notFound>
+    <div>Tarefa não encontrado</div>
+</ng-template>
