@@ -209,32 +209,39 @@ export class TodosFacadeService {
     return this.allTodos$
       .pipe(
         take(1),
-        mergeMap(todos => {
+        mergeMap((todos) => {
           const loadedTodo = todos.find(todo => todo.id === todoId);
-          if (loadedTodo) {
-            return of({
+          if(loadedTodo) {
+            const state: TodoState = {
               loading: false,
               todo: loadedTodo,
-            });
+            }
+            return of(state);
           }
           return this.todosApi.getTodo(todoId)
             .pipe(
-              tap(todo => {
-                this.todosState.addTodo(todo)
+              tap(response => {
+                this.todosState.addTodo(response);
               }),
-              map(response => ({
-                loading: false,
-                todo: response,
-              })),
-              startWith({
+              map(response => {
+                const state: TodoState = {
+                  loading: false,
+                  todo: response,
+                }
+                return state;
+              }),
+              startWith(<TodoState>{
                 loading: true,
                 todo: null,
               }),
-              catchError(() => of({
-                loading: false,
-                todo: null,
-              }))
-            );
+              catchError((error) => {
+                const state: TodoState = {
+                  loading: false,
+                  todo: null,
+                }
+                return of(state);
+              })
+            )
         })
       )
   }

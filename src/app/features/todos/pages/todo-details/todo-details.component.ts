@@ -15,8 +15,13 @@ export class TodoDetailsComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private todosFacade: TodosFacadeService,
-    ) {
-    this.activatedRoute.params
+  ) {
+
+  }
+
+  ngOnInit(): void {
+    this.activatedRoute
+      .params
       .pipe(
         map(params => params.id),
         switchMap(todoId => this.todosFacade.getTodoById(todoId))
@@ -25,9 +30,6 @@ export class TodoDetailsComponent implements OnInit {
         this.todoState = todoState;
         console.log(todoState);
       })
-  }
-
-  ngOnInit(): void {
   }
 
 }
